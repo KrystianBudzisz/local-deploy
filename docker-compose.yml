@@ -1,0 +1,62 @@
+version: '3.5'
+
+services:
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_PASSWORD=test
+      - RABBITMQ_USER=test
+      - RABBITMQ_USERNAME=test
+      - RABBITMQ_DEFAULT_USER=test
+      - RABBITMQ_DEFAULT_PASS=test
+    networks:
+      - app-tier
+
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+    networks:
+      - app-tier
+
+  keycloak:
+    image: keycloak/keycloak:22.0
+    environment:
+      KEYCLOAK_ADMIN: test
+      KEYCLOAK_ADMIN_PASSWORD: test
+#      KEYCLOAK_USER: admin
+#      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: MYSQL
+      DB_ADDR: keycloak_db
+      DB_DATABASE: keycloak
+      DB_USER: root
+      DB_PASSWORD: root
+    ports:
+      - "8081:8080"
+    command:
+      - start-dev
+    depends_on:
+      - keycloak_db
+    networks:
+      - app-tier
+
+  keycloak_db:
+    image: "mysql:5.7"
+    platform: linux/x86_64
+    restart: always
+    environment:
+      MYSQL_DATABASE: keycloak
+      #      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    ports:
+      - "3308:3306"
+
+networks:
+  app-tier:
+    driver: bridge
