@@ -24,6 +24,8 @@ services:
       - MYSQL_DATABASE=currency
     networks:
       - app-tier
+#    volumes:
+#      - ./rabbitmq-init.sh:/docker-entrypoint-init.d/rabbitmq-init.sh
 
   keycloak:
     image: keycloak/keycloak:22.0
