@@ -34,11 +34,10 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: test
 #      KEYCLOAK_USER: admin
 #      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: MYSQL
-      DB_ADDR: keycloak_db
-      DB_DATABASE: keycloak
-      DB_USER: root
-      DB_PASSWORD: root
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://keycloak_db/keycloak
+      KC_DB_USERNAME: root
+      KC_DB_PASSWORD: root
     ports:
       - "8081:8080"
     command:
@@ -56,9 +55,11 @@ services:
       MYSQL_DATABASE: keycloak
       #      MYSQL_USER: root
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_ALLOW_EMPTY_PASSWORD: true
+#      MYSQL_ALLOW_EMPTY_PASSWORD: true
     ports:
       - "3308:3306"
+    networks:
+      - app-tier
 
 networks:
   app-tier:
